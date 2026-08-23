@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MCC 에어컨 점검 체크리스트</title>
+
+<!-- 홈 화면에 추가했을 때 앱처럼 보이도록 하는 설정 -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1E3A5F">
+<link rel="icon" href="icon-192.png">
+
+<!-- 아이폰(사파리)에서 "홈 화면에 추가" 시 아이콘/이름 적용 -->
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MCC점검">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===================== 상단 헤더 ===================== -->
+  <header class="app-header">
+    <h1>MCC 내부 에어컨 점검</h1>
+    <p class="sub-title">성신양회 단양공장 · 전기팀</p>
+  </header>
+
+  <!-- 정상 점검 대기 목록 상태바 (항상 화면 위쪽에 표시) -->
+  <div class="normal-status-bar" id="normalStatusBar">
+    <span id="normalCountText">정상 점검 대기: 0건</span>
+    <button type="button" id="viewNormalListBtn" class="status-btn">목록 보기</button>
+  </div>
+
+  <!-- ===================== 입력 화면 (점검 폼) ===================== -->
+  <main id="formView" class="view">
+    <form id="checkForm">
+
+      <!-- 1. 기본 정보 -->
+      <section class="card">
+        <h2 class="section-title">1. 기본 정보</h2>
+
+        <div class="field">
+          <label for="checkerName">점검자 <span class="required">*</span></label>
+          <select id="checkerName" name="checkerName" required>
+            <option value="">-- 선택하세요 --</option>
+            <!-- 옵션 목록은 script.js 상단의 CHECKER_NAMES 배열에서 자동으로 채워집니다 -->
+          </select>
+          <p class="field-hint">한 번 선택하면 다음 개소 입력 시에도 자동으로 유지됩니다.</p>
+        </div>
+
+        <div class="field">
+          <label for="siteCategory">위치 (대분류) <span class="required">*</span></label>
+          <select id="siteCategory" name="siteCategory" required>
+            <option value="">-- 선택하세요 --</option>
+            <!-- 옵션 목록은 script.js 상단의 SITE_CATEGORIES 객체에서 자동으로 채워집니다 -->
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="siteSubLocation">위치2 (소분류) <span class="required">*</span></label>
+          <!-- 대분류를 고르면 아래 둘 중 하나만 자동으로 나타납니다:
+               - 소분류 목록이 있으면 -> select 박스
+               - 아직 목록이 없거나 '기타'면 -> 직접입력 칸 -->
+          <select id="siteSubLocation" name="siteSubLocation" style="display:none;"></select>
+          <input type="text" id="siteSubCustom" name="siteSubCustom" placeholder="세부 위치를 직접 입력하세요" style="display:none;">
+        </div>
+
+        <div class="field">
+          <label for="acLocation">에어컨 위치 <span class="required">*</span></label>
+          <input type="text" id="acLocation" name="acLocation" placeholder="예: MCC실 출입구 옆 벽면 에어컨" required>
+        </div>
+
+        <div class="field">
+          <label for="acSpec">에어컨 규격 <span class="required">*</span></label>
+          <input type="text" id="acSpec" name="acSpec" placeholder="예: 천장형 5마력" required>
+        </div>
+      </section>
+
+      <!-- 2. 이상 유무 -->
+      <section class="card">
+        <h2 class="section-title">2. 이상 유무</h2>
+
+        <div class="field">
+          <label>이상 유무 <span class="required">*</span></label>
+          <div class="btn-group" data-group="abnormalFlag">
+            <button type="button" class="option-btn" data-value="이상없음">이상없음</button>
+            <button type="button" class="option-btn" data-value="이상">이상</button>
+          </div>
+          <input type="hidden" id="abnormalFlag" name="abnormalFlag" required>
+        </div>
+
+        <!-- 이상 선택 시에만 나타나는 사진 첨부 영역 -->
+        <div class="field" id="photoField" style="display:none;">
+          <label>점검 사진 첨부</label>
+          <div class="photo-buttons">
+            <label class="photo-btn" for="photoCapture">📷 사진 촬영</label>
+            <input type="file" id="photoCapture" accept="image/*" capture="environment" hidden>
+
+            <label class="photo-btn" for="photoGallery">🖼 갤러리에서 선택</label>
+            <input type="file" id="photoGallery" accept="image/*" hidden>
+          </div>
+          <div id="photoPreviewWrap" class="photo-preview-wrap"></div>
+        </div>
+      </section>
+
+      <!-- 3. 필요 자재 -->
+      <section class="card">
+        <h2 class="section-title">3. 필요한 자재</h2>
+        <div class="field">
+          <label for="materials">필요한 자재 (없으면 비워두세요)</label>
+          <textarea id="materials" name="materials" rows="3" placeholder="예: 필터 2개, 냉매 보충 필요 등"></textarea>
+        </div>
+      </section>
+
+      <button type="submit" class="submit-btn">저장하기</button>
+      <p class="field-hint center-hint">"이상없음"은 즉시 전송되지 않고 위 목록에 쌓입니다. "이상"은 저장 시 바로 확인화면으로 이동합니다.</p>
+    </form>
+  </main>
+
+  <!-- ===================== 확인 화면 (이상 항목 전용) ===================== -->
+  <main id="confirmView" class="view" style="display:none;">
+    <section class="card">
+      <h2 class="section-title">📋 점검 내용 확인</h2>
+      <div id="confirmContent" class="confirm-content"></div>
+    </section>
+
+    <div class="confirm-btn-row">
+      <button type="button" id="editBtn" class="secondary-btn">수정하기</button>
+      <button type="button" id="finalSubmitBtn" class="submit-btn">텔레그램으로 즉시 전송</button>
+    </div>
+  </main>
+
+  <!-- ===================== 정상 점검 대기 목록 화면 ===================== -->
+  <main id="normalListView" class="view" style="display:none;">
+    <section class="card">
+      <h2 class="section-title">📝 정상 점검 대기 목록</h2>
+      <div id="normalListContent" class="normal-list-content"></div>
+    </section>
+
+    <div class="confirm-btn-row">
+      <button type="button" id="closeNormalListBtn" class="secondary-btn">닫기</button>
+      <button type="button" id="sendNormalListBtn" class="submit-btn">일괄 전송</button>
+    </div>
+  </main>
+
+  <!-- ===================== 제출 완료 화면 (이상 항목 전송 후) ===================== -->
+  <main id="doneView" class="view" style="display:none;">
+    <section class="card done-card">
+      <div class="done-icon">✅</div>
+      <h2>전송이 완료되었습니다</h2>
+      <p class="done-desc">이상 내용이 텔레그램 방으로 즉시 전송되었습니다.</p>
+      <button type="button" id="continueBtn" class="submit-btn">다음 개소 계속 점검하기</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

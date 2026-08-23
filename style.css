@@ -1,0 +1,388 @@
+/* =========================================================
+   색상 / 크기 등 공통 값 (여기 값만 바꾸면 전체 디자인이 바뀝니다)
+   ========================================================= */
+:root {
+  --color-primary: #1E3A5F;      /* 헤더, 주요 버튼 색 (짙은 철강 블루) */
+  --color-primary-dark: #14283F;
+  --color-accent: #FF6B35;       /* 이상/경고 강조 색 (세이프티 오렌지) */
+  --color-success: #2D9D5F;      /* 정상 상태 색 */
+  --color-danger: #D64545;       /* 고장/이상 상태 색 */
+  --color-warning: #E8A33D;      /* 오염 등 주의 상태 색 */
+  --color-bg: #F2F4F7;
+  --color-card-bg: #FFFFFF;
+  --color-text: #1F2937;
+  --color-text-light: #6B7280;
+  --color-border: #D9DEE4;
+
+  --radius: 12px;
+  --gap: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "Apple SD Gothic Neo", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding-bottom: 40px;
+}
+
+/* ================= 헤더 ================= */
+.app-header {
+  background: var(--color-primary);
+  color: #fff;
+  padding: 22px 18px 20px;
+  text-align: center;
+  border-bottom: 4px solid var(--color-accent);
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.app-header .sub-title {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #C9D6E3;
+}
+
+/* ================= 화면 공통 ================= */
+.view {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* ================= 카드 ================= */
+.card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-bg);
+}
+
+/* ================= 입력 필드 공통 ================= */
+.field {
+  margin-bottom: var(--gap);
+}
+.field:last-child { margin-bottom: 0; }
+
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+.field-row .half {
+  flex: 1;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+.required {
+  color: var(--color-danger);
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 12px;
+  font-size: 16px;   /* 16px 이상: 스마트폰에서 자동 확대 방지 */
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-text);
+  font-family: inherit;
+}
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* ================= 선택형 큰 버튼 그룹 (운전상태, 필터상태 등) ================= */
+.btn-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.option-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 14px 8px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.option-btn:active {
+  transform: scale(0.97);
+}
+
+/* 선택된 버튼 색상: data-value 값에 따라 다르게 표시 */
+.option-btn.active { color: #fff; border-color: transparent; }
+.option-btn[data-value="정상"].active   { background: var(--color-success); }
+.option-btn[data-value="운전"].active   { background: var(--color-success); }
+.option-btn[data-value="정지"].active   { background: #8B99AA; }
+.option-btn[data-value="오염"].active   { background: var(--color-warning); }
+.option-btn[data-value="고장"].active   { background: var(--color-danger); }
+.option-btn[data-value="이상"].active   { background: var(--color-danger); }
+
+/* ================= 이상 발생 시 강조 표시 ================= */
+.field.highlight label {
+  color: var(--color-accent);
+}
+.field.highlight textarea,
+.field.highlight input {
+  border: 2px solid var(--color-accent);
+  background: #FFF5F0;
+}
+
+/* ================= 사진 첨부 ================= */
+.photo-buttons {
+  display: flex;
+  gap: 10px;
+}
+.photo-btn {
+  flex: 1;
+  text-align: center;
+  padding: 14px 8px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  border: 2px dashed var(--color-accent);
+  color: var(--color-accent);
+  background: #FFF5F0;
+  cursor: pointer;
+}
+.photo-preview-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.photo-preview-wrap img {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+.photo-thumb {
+  position: relative;
+}
+.photo-remove-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  color: #fff;
+  border: none;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ================= 버튼: 제출/보조 ================= */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.submit-btn:active { background: var(--color-primary-dark); }
+
+.secondary-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: #fff;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.confirm-btn-row {
+  display: flex;
+  gap: 10px;
+}
+.confirm-btn-row .secondary-btn,
+.confirm-btn-row .submit-btn {
+  flex: 1;
+}
+
+/* ================= 확인 화면 내용 ================= */
+.confirm-content dl {
+  margin: 0;
+}
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-bg);
+  font-size: 14px;
+}
+.confirm-row:last-child { border-bottom: none; }
+.confirm-row .c-label {
+  color: var(--color-text-light);
+  min-width: 110px;
+  flex-shrink: 0;
+}
+.confirm-row .c-value {
+  text-align: right;
+  font-weight: 600;
+  word-break: break-word;
+}
+.confirm-row .c-value.tag-abnormal { color: var(--color-danger); }
+.confirm-row .c-value.tag-normal { color: var(--color-success); }
+
+.confirm-photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.confirm-photo-grid img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+/* =========================================================
+   상단 상태바 (정상 점검 대기 N건 / 목록 보기 버튼)
+   ========================================================= */
+.normal-status-bar {
+  max-width: 480px;
+  margin: 12px auto 0;
+  padding: 10px 14px;
+  background: #EAF3FF;
+  border: 1px solid #BFD9F5;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.status-btn {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* 필드 아래 작은 안내 문구 */
+.field-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+.center-hint {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ================= 정상 대기 목록 화면 ================= */
+.normal-list-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.normal-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+.normal-list-item .item-text {
+  flex: 1;
+}
+.normal-list-item .item-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+.normal-list-item .item-sub {
+  font-size: 13px;
+  color: var(--color-text-light);
+}
+.normal-list-item .item-delete-btn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+.empty-list-msg {
+  text-align: center;
+  color: var(--color-text-light);
+  font-size: 14px;
+  padding: 24px 0;
+}
+
+/* ================= 완료 화면 ================= */
+.done-card {
+  text-align: center;
+  padding: 40px 20px;
+}
+.done-icon { font-size: 48px; margin-bottom: 10px; }
+.done-desc {
+  color: var(--color-text-light);
+  font-size: 14px;
+  margin: 10px 0 22px;
+}
