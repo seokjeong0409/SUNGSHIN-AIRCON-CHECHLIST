@@ -90,6 +90,12 @@
           <input type="hidden" id="abnormalFlag" name="abnormalFlag" required>
         </div>
 
+        <!-- 이상 선택 시에만 나타나는 이상 내용 입력란 -->
+        <div class="field" id="abnormalDetailField" style="display:none;">
+          <label for="abnormalDetail">이상 내용</label>
+          <textarea id="abnormalDetail" name="abnormalDetail" rows="3" placeholder="어떤 이상인지 구체적으로 입력하세요"></textarea>
+        </div>
+
         <!-- 이상 선택 시에만 나타나는 사진 첨부 영역 -->
         <div class="field" id="photoField" style="display:none;">
           <label>점검 사진 첨부</label>

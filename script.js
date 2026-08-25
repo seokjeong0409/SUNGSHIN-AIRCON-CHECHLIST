@@ -3,7 +3,7 @@
    ========================================================= */
 
 // 점검자 목록 - 필요에 맞게 이름을 수정/추가/삭제하세요
-const CHECKER_NAMES = ["안병일", "홍지원", "전기팀 사무실"];
+const CHECKER_NAMES = ["안병일", "홍지원"];
 
 // 위치(대분류) / 위치2(소분류) 목록
 // - 대분류 하나당 소분류 배열을 넣어주세요.
@@ -26,72 +26,13 @@ const SITE_CATEGORIES = {
     "K/L #5 IDF CO ROOM",
     "CO/M #3,4 CO-METER ROOM"
   ],
-  "Kiln MCC (B/H포함)": [
-    "K/L #1 MCC",
-    "1공장 K/L CPR ROOM",
-    "K/L #1,2 CPR ROOM",
-    "K/L #2 MCC",
-    "K/L #2 B/H MCC",
-    "K/L #2 COOLER E/P MCC",
-    "K/L #3 B/H MCC",
-    "K/L #3 DC MAIN DRIVE ROOM",
-    "K/L #5 MCC",
-    "K/L #5 INVERTER ROOM",
-    "K/L #6 INVERTER ROOM",
-    "K/L #6 MCC"
-  ],
-  "Cooler MCC": [
-    "#2 COOLER E/P MCC",
-    "#3 COOLER MCC",
-    "#5 COOLER MCC",
-    "#6 COOLER MCC"
-  ],
-  "Raw Mill MCC": [
-    "R/M #1,2 MCC",
-    "R/M #3 MCC(구)",
-    "R/M #3 MCC(신)",
-    "R/M #4 MCC",
-    "R/M #5 MCC",
-    "R/M #6 MCC",
-    "R/M #7,8 MCC"
-  ],
-  "Coal Mill MCC": [
-    "Co/M #1,2 MCC",
-    "Co/M #2,4 MCC"
-  ],
-  "Cement Mill MCC (도착물, 치장 포함)": [
-    "C/M #1,2 MCC",
-    "C/M #3,4 MCC",
-    "C/M #5-7 MCC",
-    "C/M #8 MCC",
-    "C/M #9,10 MCC",
-    "C/M #11-13 MCC",
-    "PGR MCC",
-    "돔치장 MCC",
-    "1차 Coal 치장 MCC",
-    "Bulk장 MCC",
-    "포장실 #1-3 MCC",
-    "포장실 #4,5 MCC",
-    "도착물 MCC"
-  ],
-
-  "공업용수": [
-    "1공장 공업용수 MCC",
-    "2공장 공업용수 MCC"
-  ],
-  "광산 Part": [
-    "광산 변전실",
-    "#1 P/Cr MCC",
-    "#2 P/Cr MCC",
-    "#3 P/Cr MCC",
-    "S/Cr MCC",
-    "1호 STACKER",
-    "2호 STACKER",
-    "1호 RECLAIMER",
-    "2호 RECLAIMER",
-    "3호 RECLAIMER",
-    "3호 Premixing MCC"
-  ],
+  "Kiln MCC (B/H포함)": [],
+  "Cooler MCC": [],
+  "Raw Mill MCC": [],
+  "Coal Mill MCC": [],
+  "Cement Mill MCC (도착물, 치장 포함)": [],
+  "Inverter Room": [],
+  "광산 Part": [],
   "기타": []
 };
 
@@ -99,12 +40,16 @@ const SITE_CATEGORIES = {
 // 텔레그램 설정 (반드시 아래 두 값을 채워 넣어야 전송이 됩니다)
 // 봇 토큰 만드는 법 / 채팅방 ID 확인하는 법은 대화창에서 안내드린 절차를 참고하세요.
 // ---------------------------------------------------------
-const TELEGRAM_BOT_TOKEN = "8929061697:AAEnFkuzIVaenvOPh5cVvww9QMOJHEZDQkk";   // 
-const TELEGRAM_CHAT_ID   = "-5300662112";  // 
+const TELEGRAM_BOT_TOKEN = "여기에_봇_토큰을_입력하세요";   // 예: "123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const TELEGRAM_CHAT_ID   = "여기에_채팅방_ID를_입력하세요";  // 예: "-1002345678901"
 
 // 브라우저에 데이터를 잠시 저장해두는 열쇠 이름 (앱을 새로고침해도 목록이 안 사라지게 해줌)
 const STORAGE_KEY_NORMAL_LIST = "mcc_pending_normal_list";
 const STORAGE_KEY_CHECKER_NAME = "mcc_last_checker_name";
+
+// 정상 대기 목록에 담긴 항목이 이 시간(시간 단위)이 지나면 자동으로 사라집니다.
+// 예: 12로 두면, 오늘 추가한 항목이 다음날 12시간이 지난 뒤 앱을 열었을 때 자동으로 비워집니다.
+const NORMAL_LIST_EXPIRY_HOURS = 12;
 
 // "이상없음" 항목들이 임시로 쌓이는 목록 (일괄 전송 전까지 여기 보관됨)
 let pendingNormalList = [];
@@ -239,15 +184,17 @@ function setupOptionButtonGroups() {
 
 
 /* =========================================================
-   3. "이상 유무"에서 이상 선택 시 사진 첨부란 표시
+   3. "이상 유무"에서 이상 선택 시 이상 내용 입력란 + 사진 첨부란 표시
    ========================================================= */
 function setupAbnormalToggle() {
   const abnormalFlagInput = document.getElementById("abnormalFlag");
+  const abnormalDetailField = document.getElementById("abnormalDetailField");
   const photoField = document.getElementById("photoField");
 
   abnormalFlagInput.addEventListener("change", () => {
     const isAbnormal = abnormalFlagInput.value === "이상";
-    // 이상일 때만 사진 첨부란 표시
+    // 이상일 때만 이상 내용 입력란 + 사진 첨부란 표시
+    abnormalDetailField.style.display = isAbnormal ? "block" : "none";
     photoField.style.display = isAbnormal ? "block" : "none";
   });
 }
@@ -365,6 +312,7 @@ const CONFIRM_FIELD_LIST = [
   { id: "acLocation", label: "에어컨 위치" },
   { id: "acSpec", label: "에어컨 규격" },
   { id: "abnormalFlag", label: "이상 유무" },
+  { id: "abnormalDetail", label: "이상 내용" },
   { id: "materials", label: "필요한 자재" }
 ];
 
@@ -397,9 +345,11 @@ function addToNormalList() {
     siteSubLocation: getSubLocationValue(),
     acLocation: document.getElementById("acLocation").value.trim(),
     acSpec: document.getElementById("acSpec").value.trim(),
-    materials: document.getElementById("materials").value.trim()
+    materials: document.getElementById("materials").value.trim(),
+    time: Date.now() // 자동 만료 판단에 사용되는 등록 시각
   };
 
+  pruneExpiredEntries(); // 새 항목을 넣기 전에, 너무 오래된 항목부터 먼저 정리
   pendingNormalList.push(entry);
   savePendingListToStorage();
   renderNormalStatusBar();
@@ -408,6 +358,19 @@ function addToNormalList() {
 
   // 점검자는 유지한 채로 나머지 입력창만 비워서 바로 다음 개소를 입력할 수 있게 함
   resetForm({ keepChecker: true });
+}
+
+// 등록된 지 NORMAL_LIST_EXPIRY_HOURS 시간이 지난 항목을 목록에서 자동으로 제거
+function pruneExpiredEntries() {
+  const expiryMs = NORMAL_LIST_EXPIRY_HOURS * 60 * 60 * 1000;
+  const now = Date.now();
+  const beforeCount = pendingNormalList.length;
+
+  pendingNormalList = pendingNormalList.filter((entry) => (now - entry.time) < expiryMs);
+
+  if (pendingNormalList.length !== beforeCount) {
+    savePendingListToStorage();
+  }
 }
 
 // 정상 대기 목록을 localStorage에 저장 (새로고침해도 목록이 사라지지 않도록)
@@ -628,6 +591,7 @@ function buildReportText() {
   const acLocation = document.getElementById("acLocation").value.trim();
   const acSpec = document.getElementById("acSpec").value.trim();
   const abnormalFlag = document.getElementById("abnormalFlag").value.trim();
+  const abnormalDetail = document.getElementById("abnormalDetail").value.trim();
   const materials = document.getElementById("materials").value.trim();
 
   let text = "[MCC 에어컨 점검 보고]\n";
@@ -638,6 +602,7 @@ function buildReportText() {
   text += `에어컨 위치: ${acLocation}\n`;
   text += `에어컨 규격: ${acSpec}\n`;
   text += `이상 유무: ${abnormalFlag}\n`;
+  text += `이상 내용: ${abnormalDetail ? abnormalDetail : "-"}\n`;
   text += `필요한 자재: ${materials ? materials : "없음"}`;
 
   return text;
@@ -751,6 +716,7 @@ function resetForm(options = {}) {
     document.getElementById(group.dataset.group).value = "";
   });
 
+  document.getElementById("abnormalDetailField").style.display = "none";
   document.getElementById("photoField").style.display = "none";
 
   attachedPhotos = [];
