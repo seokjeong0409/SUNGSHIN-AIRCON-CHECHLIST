@@ -3,7 +3,7 @@
    ========================================================= */
 
 // 점검자 목록 - 필요에 맞게 이름을 수정/추가/삭제하세요
-const CHECKER_NAMES = ["안병일", "홍지원"];
+const CHECKER_NAMES = ["안병일", "홍지원", "전기팀 사무실"];
 
 // 위치(대분류) / 위치2(소분류) 목록
 // - 대분류 하나당 소분류 배열을 넣어주세요.
@@ -26,13 +26,72 @@ const SITE_CATEGORIES = {
     "K/L #5 IDF CO ROOM",
     "CO/M #3,4 CO-METER ROOM"
   ],
-  "Kiln MCC (B/H포함)": [],
-  "Cooler MCC": [],
-  "Raw Mill MCC": [],
-  "Coal Mill MCC": [],
-  "Cement Mill MCC (도착물, 치장 포함)": [],
-  "Inverter Room": [],
-  "광산 Part": [],
+  "Kiln MCC (B/H포함)": [
+    "K/L #1 MCC",
+    "1공장 K/L CPR ROOM",
+    "K/L #1,2 CPR ROOM",
+    "K/L #2 MCC",
+    "K/L #2 B/H MCC",
+    "K/L #2 COOLER E/P MCC",
+    "K/L #3 B/H MCC",
+    "K/L #3 DC MAIN DRIVE ROOM",
+    "K/L #5 MCC",
+    "K/L #5 INVERTER ROOM",
+    "K/L #6 INVERTER ROOM",
+    "K/L #6 MCC"
+  ],
+  "Cooler MCC": [
+    "#2 COOLER E/P MCC",
+    "#3 COOLER MCC",
+    "#5 COOLER MCC",
+    "#6 COOLER MCC"
+  ],
+  "Raw Mill MCC": [
+    "R/M #1,2 MCC",
+    "R/M #3 MCC(구)",
+    "R/M #3 MCC(신)",
+    "R/M #4 MCC",
+    "R/M #5 MCC",
+    "R/M #6 MCC",
+    "R/M #7,8 MCC"
+  ],
+  "Coal Mill MCC": [
+    "Co/M #1,2 MCC",
+    "Co/M #2,4 MCC"
+  ],
+  "Cement Mill MCC (도착물, 치장 포함)": [
+    "C/M #1,2 MCC",
+    "C/M #3,4 MCC",
+    "C/M #5-7 MCC",
+    "C/M #8 MCC",
+    "C/M #9,10 MCC",
+    "C/M #11-13 MCC",
+    "PGR MCC",
+    "돔치장 MCC",
+    "1차 Coal 치장 MCC",
+    "Bulk장 MCC",
+    "포장실 #1-3 MCC",
+    "포장실 #4,5 MCC",
+    "도착물 MCC"
+  ],
+
+  "공업용수": [
+    "1공장 공업용수 MCC",
+    "2공장 공업용수 MCC"
+  ],
+  "광산 Part": [
+    "광산 변전실",
+    "#1 P/Cr MCC",
+    "#2 P/Cr MCC",
+    "#3 P/Cr MCC",
+    "S/Cr MCC",
+    "1호 STACKER",
+    "2호 STACKER",
+    "1호 RECLAIMER",
+    "2호 RECLAIMER",
+    "3호 RECLAIMER",
+    "3호 Premixing MCC"
+  ],
   "기타": []
 };
 
