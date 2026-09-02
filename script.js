@@ -99,8 +99,8 @@ const SITE_CATEGORIES = {
 // 텔레그램 설정 (반드시 아래 두 값을 채워 넣어야 전송이 됩니다)
 // 봇 토큰 만드는 법 / 채팅방 ID 확인하는 법은 대화창에서 안내드린 절차를 참고하세요.
 // ---------------------------------------------------------
-const TELEGRAM_BOT_TOKEN = "여기에_봇_토큰을_입력하세요";   // 예: "123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const TELEGRAM_CHAT_ID   = "여기에_채팅방_ID를_입력하세요";  // 예: "-1002345678901"
+const TELEGRAM_BOT_TOKEN = "8929061697:AAEnFkuzIVaenvOPh5cVvww9QMOJHEZDQkk";   // 
+const TELEGRAM_CHAT_ID   = "-5300662112";  // 
 
 // 브라우저에 데이터를 잠시 저장해두는 열쇠 이름 (앱을 새로고침해도 목록이 안 사라지게 해줌)
 const STORAGE_KEY_NORMAL_LIST = "mcc_pending_normal_list";
